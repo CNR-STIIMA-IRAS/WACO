@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<launch>
+  <!-- complete urdf with both robots, gripper, tool and workpiece -->
+  <param name="complete urdf" textfile="$(find evolaser_waco)/Urdf/robot_gripper/robot_gripper.urdf"/>
+  
+  <arg name="gui" default="True" />
+  <param name="robot_description" textfile="$(find evolaser_waco)/Urdf/rviz/cella_evolaser_tubo_storto.urdf" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />  
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find itia_ros_wacocuda)/rviz/show_settings.rviz" />
+
+  <arg name="path" />
+  <arg name="points" /> 
+  
+  <node name="show_trajetcory"  pkg="itia_ros_wacocuda" type="show_trajectory" args=" $(arg path) $(arg points)" output="screen" required="true" />
+</launch>

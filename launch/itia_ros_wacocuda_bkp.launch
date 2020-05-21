@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<launch>
+  <!-- urdf for the robots position limits and velocity limits -->
+  <param name="robot_description_positioner" textfile="$(find evolaser_waco)/Urdf/robot_gripper/robot_gripper.urdf"/>
+  <param name="robot_description_tool"       textfile="$(find evolaser_waco)/Urdf/robot_tool/robot_tool.urdf"/>
+  
+  <!-- urdf paths for the coarse collisions ex. robot links and enviroment. Folder must include all links generated binvox files -->
+  <param name="urdf_pos_coarse_coll" value="$(find evolaser_waco)/Urdf/robot_gripper/robot_gripper.urdf"/>
+  <param name="urdf_rob_coarse_coll" value="$(find evolaser_waco)/Urdf/robot_tool/robot_tool.urdf"/>
+  <param name="urdf_env_coarse_coll" value="$(find evolaser_waco)/Urdf/environment/environment.urdf"/>
+  
+  <!-- urdf paths for the fine collisions ex. gripper with workpiece and working tool . Folder must include all links generated binvox files-->
+  <param name="urdf_pos_fine_coll" value="$(find evolaser_waco)/Urdf/gripper_workpiece/gripper_tubo_storto.urdf"/>
+  <param name="urdf_rob_fine_coll" value="$(find evolaser_waco)/Urdf/tool/tool_joints.urdf"/>
+  
+  <rosparam command="load" file="$(find itia_ros_wacocuda)/cfg/waco_params.yaml"/>
+  <rosparam command="load" file="$(find itia_ros_wacocuda)/cfg/heuristics_params.yaml"/>
+
+  <arg   name="traj_from_csv" default="true" />
+  <param name="/traj_from_csv" type="bool" value="$(arg traj_from_csv)"/> 
+  <param name="path_csv" value="$(find evolaser_waco)/traiettorie_CSV/tubo_storto.txt"/> 
+  <!--param name="path_csv" value="$(find evolaser_waco)/traiettorie_CSV/asola_tubo_storto_51.txt"/-->
+  <group unless="$(arg traj_from_csv)">
+    <rosparam command="load" file="$(find itia_ros_wacocuda)/cfg/trajectory.yaml"/>
+  </group>
+  
+  <param name="output_name" type="str" value="new"/>
+  
+  <node  name="itia_ros_wacocuda"  pkg="itia_ros_wacocuda" type="itia_ros_wacocuda" output="screen" required="true" />
+</launch>
+
+<!-- required="true"-->
+<!-- launch-prefix="cuda-memcheck leak-check full"-->

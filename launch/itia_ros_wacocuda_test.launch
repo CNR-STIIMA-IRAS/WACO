@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<launch>
+    
+  <!-- Notice that all the link and joints of the same robot in the different urdfs have to have the same name -->
+  <!--Complete urdf for the robots position limits and velocity limits and visualization -->
+  <param name="robot_description_positioner" textfile="$(find evolaser_waco)/Urdf/complete/positioner.urdf"/>
+  <param name="robot_description_tool"       textfile="$(find evolaser_waco)/Urdf/complete/tool_robot.urdf"/>
+  
+  <!-- urdf paths for the coarse collisions ex. robot links and enviroment. Folder must include all objects generated binvox files -->
+  <!-- This urdf files just include the robots links without the gripper/tool and the workpiece -->
+  <param name="urdf_pos_coarse_coll" value="$(find evolaser_waco)/Urdf/robot_gripper/robot_gripper.urdf"/>
+  <param name="urdf_rob_coarse_coll" value="$(find evolaser_waco)/Urdf/robot_tool/robot_tool.urdf"/>
+  <param name="urdf_env_coarse_coll" value="$(find evolaser_waco)/Urdf/environment/environment.urdf"/>
+  
+  <!-- urdf paths for the fine collisions ex. gripper with workpiece and working tool . Folder must include all links generated binvox files-->
+  <!-- This urdf files just include the gripper/tool and the workpiece , the robots links have no geometry -->
+  <param name="urdf_pos_fine_coll" value="$(find evolaser_waco)/Urdf/gripper_workpiece/gripper_tubo_storto.urdf"/>
+  <param name="urdf_rob_fine_coll" value="$(find evolaser_waco)/Urdf/tool/tool_joints.urdf"/>
+  
+  <!-- Configuration files with the algorith and optimization parameters-->
+  <rosparam command="load" file="$(find itia_ros_wacocuda)/cfg/waco_params.yaml"/>
+  <rosparam command="load" file="$(find itia_ros_wacocuda)/cfg/heuristics_params.yaml"/>
+
+  <!-- Trajectory parsing file-->
+  <arg   name="traj_from_csv" default="true" />
+  <param name="/traj_from_csv" type="bool" value="$(arg traj_from_csv)"/> 
+  <param name="path_csv" value="$(find evolaser_waco)/traiettorie_CSV/asola_tubo_storto_51.txt"/>
+  <group unless="$(arg traj_from_csv)">
+    <rosparam command="load" file="$(find itia_ros_wacocuda)/cfg/trajectory.yaml"/>
+  </group>
+  
+  <!--Output folder path -->
+  <param name="output_name" type="str" value="asola_tubo_storto_51"/>
+  
+  <!--node  name="itia_ros_wacocuda"  pkg="itia_ros_wacocuda" type="itia_ros_wacocuda" output="screen" required="true" /-->
+  
+  <!-- Visualization in Rviz -->
+  
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher_tool">
+    <param name="publish_frequency" value="1"/>
+    <remap from="robot_description" to="robot_description_tool" />
+  </node>
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher_positioner">
+    <param name="publish_frequency" value="1"/>
+    <remap from="robot_description" to="robot_description_positioner" />
+  </node>
+  
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher_tool">
+    <param name="rate" value="1"/>
+    <param name="use_gui" value="true"/>
+    <remap from="robot_description" to="robot_description_tool" />
+  </node>
+
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher_positioner">
+    <param name="rate" value="1"/>
+    <param name="use_gui" value="true"/>
+    <remap from="robot_description" to="robot_description_positioner" />
+  </node>
+  
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find evolaser_waco)/rviz/visualize.rviz" />
+  
+  
+</launch>

@@ -1,0 +1,20 @@
+waco_params:
+  UPPER_RANGE:  1.5
+  LOWER_RANGE: -1.5     #radiants
+  STEP:         0.01     #radiants
+  multiturn:   [0,0,0,1,0,1] # 1 corresponds to joint with multiturn in working robot
+  MAX_OPEN_CONE_ANGLE: 0.0 #cone angle aperture
+  N_OPEN_CONE: 1
+  N_ROT_CONE:  1
+  RTOOL_RPOS:  [-1, 0, 0, 2.8,
+                 0,-1, 0,   0,
+                 0, 0, 1,   0,
+                 0, 0, 0,   1]  #transformation matrix between the base of the tool robot and the base of positioner robot
+  GRIPPER:     [ 0,-1, 0,   0,
+                 1, 0, 0,   0,
+                 0, 0, 1,0.13,
+                 0, 0, 0,   1]  #transformation matrix between the flange of the positioner robot and the gripper tcp
+  TOOL:        [ 0, 0, 1,0.25,
+                 0, 1, 0,   0,
+                -1, 0, 0,0.0775,
+                 0, 0, 0,   1]  #transformation matrix between the flange of the working robot and the working tcp 

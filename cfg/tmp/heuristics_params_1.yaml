@@ -1,0 +1,6 @@
+HEURISTIC:
+  ant_cycles:   50
+  whale_num:    30
+  whale_cycles: 25
+  ALim:         1
+  beta:         2

@@ -1,0 +1,5 @@
+traj_params:
+  path_shape:   cerchio
+  pointsnumber: 20
+  radius:       0.0575
+  speed:        0.050
